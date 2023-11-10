@@ -13,11 +13,14 @@ class GuessPage extends StatefulWidget {
   State<GuessPage> createState() => _GuessPageState();
 }
 
-class _GuessPageState extends State<GuessPage> {
+class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMixin {
   int _value = 0;
   bool _guessing = false;
   bool? _isBig;
   final Random _random = Random();
+
+  late AnimationController controller;
+
 
   void _generateRandomValue() {
     setState(() {
@@ -35,6 +38,7 @@ class _GuessPageState extends State<GuessPage> {
 
     print("---------输入值: $guessValue");
     if (guessValue == null || !_guessing) return;
+    controller.forward(from: 0);
     //猜对了
     if (guessValue == _value) {
       print("=====Check:目标数值:$_value=====${_guessCtrl.text}============");
@@ -51,9 +55,21 @@ class _GuessPageState extends State<GuessPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(vsync: this,duration: const Duration(milliseconds: 200));
+  }
+
+  @override
   void dispose() {
     _guessCtrl.dispose();
+    controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -69,10 +85,10 @@ class _GuessPageState extends State<GuessPage> {
             Column(
             children: [
               if(_isBig!)
-              const ResultNotice(color: Colors.redAccent, info: "大了"),
+               ResultNotice(color: Colors.redAccent, info: "大了",controller: controller,),
               const Spacer(),
               if(!_isBig!)
-              const ResultNotice(color: Colors.blueAccent, info: '小了')
+                ResultNotice(color: Colors.blueAccent, info: '小了',controller: controller,)
             ],
           ),
           Center(
@@ -82,7 +98,10 @@ class _GuessPageState extends State<GuessPage> {
                 if (!_guessing) const Text('点击生成随机数值'),
                 Text(
                   _guessing ? '**' : '$_value',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: const TextStyle(
+                    fontSize: 68,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
