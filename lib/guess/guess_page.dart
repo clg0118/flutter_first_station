@@ -38,7 +38,7 @@ class _GuessPageState extends State<GuessPage> with SingleTickerProviderStateMix
 
     print("---------输入值: $guessValue");
     if (guessValue == null || !_guessing) return;
-    controller.forward(from: 0);
+    controller.forward(from: 0.5);
     //猜对了
     if (guessValue == _value) {
       print("=====Check:目标数值:$_value=====${_guessCtrl.text}============");

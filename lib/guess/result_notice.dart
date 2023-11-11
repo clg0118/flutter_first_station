@@ -14,7 +14,8 @@ class ResultNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("---------- info $info");
+    print("---------- controller.value ${54 * controller.value}");
+
     return Expanded(
         child: Container(
       alignment: Alignment.center,
