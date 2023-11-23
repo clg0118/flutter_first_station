@@ -1,12 +1,17 @@
 import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_station/muyu/animate_text.dart';
 import 'package:flutter_first_station/muyu/count_panel.dart';
+import 'package:flutter_first_station/muyu/models/audio_option.dart';
 import 'package:flutter_first_station/muyu/muyu_image.dart';
+import 'package:flutter_first_station/muyu/options/select_image.dart';
 
+import 'models/image_option.dart';
 import 'muyu_app_bar.dart';
+import 'options/select_audio.dart';
 
 class MuyuPage extends StatefulWidget {
   const MuyuPage({Key, key}) : super(key: key);
@@ -21,6 +26,43 @@ class _MuyuPageState extends State<MuyuPage> {
   final Random _random = Random();
 
   AudioPool? _audioPool;
+
+  final List<ImageOption> imageOptions = const [
+    ImageOption('基础版', 'assets/images/muyu.png', 1, 3),
+    ImageOption('尊享版', 'assets/images/muyu2.png', 3, 6),
+  ];
+  int _activeImageIndex = 0;
+
+  int get knockValue {
+    int min = imageOptions[_activeImageIndex].min;
+    int max = imageOptions[_activeImageIndex].max;
+    return min + _random.nextInt(max + 1 - min);
+  }
+
+  void _onSelectImage(int value) {
+    Navigator.of(context).pop();
+    if (value == _activeImageIndex) return;
+    setState(() {
+      _activeImageIndex = value;
+    });
+  }
+
+  String get activeImage => imageOptions[_activeImageIndex].src;
+
+  final List<AudioOption> audioOptions = [
+    AudioOption('音效1', 'assets/audio/muyu1.mp3'),
+    AudioOption('音效2', 'assets/audio/muyu2.mp3'),
+    AudioOption('音效3', 'assets/audio/muyu3.mp3'),
+  ];
+  int _activeAudioIndex = 0;
+
+  void _onSelectAudio(int value) {
+    Navigator.of(context).pop();
+    if (value == _activeAudioIndex) return;
+    setState(() {
+      _activeAudioIndex = value;
+    });
+  }
 
   @override
   void initState() {
@@ -45,8 +87,7 @@ class _MuyuPageState extends State<MuyuPage> {
             child: Stack(
               alignment: Alignment.topCenter,
               children: [
-                MuyuAssetsImage(
-                    image: 'assets/images/muyu.png', onTap: _onKnock),
+                MuyuAssetsImage(image: activeImage, onTap: _onKnock),
                 if (_cruValue != 0) AnimateText(text: '功德+$_cruValue')
               ],
             ),
@@ -56,9 +97,28 @@ class _MuyuPageState extends State<MuyuPage> {
     );
   }
 
-  void _onTapSwitchAudio() {}
+  void _onTapSwitchAudio() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return AudioOptionPanel(
+              audioOptions: audioOptions,
+              onSelect: _onSelectAudio,
+              activeIndex: _activeAudioIndex);
+        });
+  }
 
-  void _onTapSwitchImage() {}
+  void _onTapSwitchImage() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return ImageOptionPanel(
+            imageOptions: imageOptions,
+            onSelect: _onSelectImage,
+            activeIndex: _activeImageIndex);
+      },
+    );
+  }
 
   void _initAudio() async {
     _audioPool = await FlameAudio.createPool('muyu_1.mp3', maxPlayers: 1);
@@ -67,7 +127,7 @@ class _MuyuPageState extends State<MuyuPage> {
   void _onKnock() {
     _audioPool?.start();
     setState(() {
-      _cruValue = 1 + _random.nextInt(3);
+      _cruValue = knockValue;
       _counter += _cruValue;
     });
   }
