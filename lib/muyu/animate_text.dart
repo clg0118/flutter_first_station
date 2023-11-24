@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AnimateText extends StatefulWidget {
-  final String text;
+import 'models/merit_record.dart';
 
-  const AnimateText({Key? key, required this.text}) : super(key: key);
+class AnimateText extends StatefulWidget {
+  final MeritRecord record;
+
+  const AnimateText({Key? key, required this.record}) : super(key: key);
 
   @override
   State<AnimateText> createState() => _AnimateTextState();
@@ -31,7 +33,9 @@ class _AnimateTextState extends State<AnimateText>
   @override
   void didUpdateWidget(covariant AnimateText oldWidget) {
     super.didUpdateWidget(oldWidget);
-    controller.forward(from: 0);
+    if (widget.record.id != oldWidget.record.id) {
+      controller.forward(from: 0);
+    }
   }
 
   @override
@@ -48,7 +52,7 @@ class _AnimateTextState extends State<AnimateText>
         position: position,
         child: FadeTransition(
           opacity: opacity,
-          child: Text(widget.text),
+          child: Text('功德+${widget.record.value}'),
         ),
       ),
     );

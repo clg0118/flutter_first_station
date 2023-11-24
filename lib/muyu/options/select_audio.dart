@@ -32,20 +32,9 @@ class AudioOptionPanel extends StatelessWidget {
               Container(
                 height: 46,
                 alignment: Alignment.center,
-                child: const Text('选择木鱼', style: labelStyle),
+                child: const Text('选择音效', style: labelStyle),
               ),
-              Expanded(
-                child: Padding(
-                  padding: padding,
-                  child: Row(
-                    children: [
-                      Expanded(child: _buildByIndex(0)),
-                      const SizedBox(width: 10),
-                      Expanded(child: _buildByIndex(1)),
-                    ],
-                  ),
-                ),
-              )
+              ...List.generate(audioOptions.length, _buildByIndex)
             ],
           )),
     );

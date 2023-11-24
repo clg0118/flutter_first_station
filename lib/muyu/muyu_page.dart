@@ -8,8 +8,11 @@ import 'package:flutter_first_station/muyu/count_panel.dart';
 import 'package:flutter_first_station/muyu/models/audio_option.dart';
 import 'package:flutter_first_station/muyu/muyu_image.dart';
 import 'package:flutter_first_station/muyu/options/select_image.dart';
+import 'package:flutter_first_station/muyu/record_history.dart';
+import 'package:uuid/uuid.dart';
 
 import 'models/image_option.dart';
+import 'models/merit_record.dart';
 import 'muyu_app_bar.dart';
 import 'options/select_audio.dart';
 
@@ -21,8 +24,11 @@ class MuyuPage extends StatefulWidget {
 }
 
 class _MuyuPageState extends State<MuyuPage> {
+  final Uuid uuid = const Uuid();
+
   int _counter = 0;
   int _cruValue = 0;
+  MeritRecord? _cruRecord;
   final Random _random = Random();
 
   AudioPool? _audioPool;
@@ -56,13 +62,16 @@ class _MuyuPageState extends State<MuyuPage> {
   ];
   int _activeAudioIndex = 0;
 
-  void _onSelectAudio(int value) {
+  void _onSelectAudio(int value) async {
     Navigator.of(context).pop();
     if (value == _activeAudioIndex) return;
-    setState(() {
-      _activeAudioIndex = value;
-    });
+    _activeAudioIndex = value;
+    _audioPool = await FlameAudio.createPool(activeAudio, maxPlayers: 1);
   }
+
+  String get activeAudio => audioOptions[_activeAudioIndex].src;
+
+  final List<MeritRecord> _records = [];
 
   @override
   void initState() {
@@ -73,7 +82,7 @@ class _MuyuPageState extends State<MuyuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MuyuAppBar(
+      appBar: MuyuAppBar(
         onTapHistory: _toHistory,
       ),
       body: Column(
@@ -88,7 +97,7 @@ class _MuyuPageState extends State<MuyuPage> {
               alignment: Alignment.topCenter,
               children: [
                 MuyuAssetsImage(image: activeImage, onTap: _onKnock),
-                if (_cruValue != 0) AnimateText(text: '功德+$_cruValue')
+                if (_cruRecord != null) AnimateText(record: _cruRecord!)
               ],
             ),
           ),
@@ -96,7 +105,15 @@ class _MuyuPageState extends State<MuyuPage> {
       ),
     );
   }
-
+  void _toHistory() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => RecordHistory(
+          records: _records.reversed.toList(),
+        ),
+      ),
+    );
+  }
   void _onTapSwitchAudio() {
     showCupertinoModalPopup(
         context: context,
@@ -129,8 +146,12 @@ class _MuyuPageState extends State<MuyuPage> {
     setState(() {
       _cruValue = knockValue;
       _counter += _cruValue;
+      String id = uuid.v4();
+      _cruRecord = MeritRecord(id, DateTime.now().millisecondsSinceEpoch,
+          _cruValue, activeImage, audioOptions[_activeAudioIndex].name);
+      _records.add(_cruRecord!);
     });
   }
 }
 
-void _toHistory() {}
+
