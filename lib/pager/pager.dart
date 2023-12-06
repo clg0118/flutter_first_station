@@ -2,8 +2,10 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_first_station/pager/color_selector.dart';
 import 'package:flutter_first_station/pager/conform_dialog.dart';
 import 'package:flutter_first_station/pager/pager_app_bar.dart';
+import 'package:flutter_first_station/pager/stork_width_selector.dart';
 
 import 'model.dart';
 
@@ -37,16 +39,56 @@ class _PagerState extends State<Pager> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PagerAppBar(onClear: _showClearDialog),
-      body: GestureDetector(
-          onPanStart: _onPanStart,
-          onPanUpdate: _onPanUpdate,
-          child: CustomPaint(
-            painter: PaperPainter(
-              lines: _lines,
+      body: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          GestureDetector(
+              onPanStart: _onPanStart,
+              onPanUpdate: _onPanUpdate,
+              child: CustomPaint(
+                painter: PaperPainter(
+                  lines: _lines,
+                ),
+                child:
+                    ConstrainedBox(constraints: const BoxConstraints.expand()),
+              )),
+          Positioned(
+            bottom: 40,
+            child: ColorSelector(
+              supportColors: supportColors,
+              activeIndex: _activeColorIndex,
+              onSelector: _onSelectColor,
             ),
-            child: ConstrainedBox(constraints: const BoxConstraints.expand()),
-          )),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 10,
+            child: StorkWidthSelector(
+              supportStorkWidths: supportStrokeWidth,
+              activeIndex: _activeStrokeIndex,
+              onSelect: _onSelectStrokeWidth,
+              color: supportColors[_activeColorIndex],
+            ),
+          )
+        ],
+      ),
     );
+  }
+
+  void _onSelectColor(int index) {
+    if (index != _activeColorIndex) {
+      setState(() {
+        _activeColorIndex = index;
+      });
+    }
+  }
+
+  void _onSelectStrokeWidth(int index) {
+    if (index != _activeStrokeIndex) {
+      setState(() {
+        _activeStrokeIndex = index;
+      });
+    }
   }
 
   void _showClearDialog() {
@@ -64,7 +106,10 @@ class _PagerState extends State<Pager> {
   }
 
   void _onPanStart(DragStartDetails details) {
-    _lines.add(Line(points: [details.localPosition]));
+    _lines.add(Line(
+        points: [details.localPosition],
+        strokeWidth: supportStrokeWidth[_activeStrokeIndex],
+        color: supportColors[_activeColorIndex]));
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
