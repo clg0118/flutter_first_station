@@ -17,7 +17,7 @@ class Pager extends StatefulWidget {
 }
 
 class _PagerState extends State<Pager> {
-  List<Line> _lines = [];
+  final List<Line> _lines = [];
 
   int _activeColorIndex = 0;
   int _activeStrokeIndex = 0;
@@ -35,10 +35,27 @@ class _PagerState extends State<Pager> {
 
   final List<double> supportStrokeWidth = [1, 2, 4, 6, 8, 10];
 
+  final List<Line> _historyLines = [];
+
+  void _back() {
+    Line line = _lines.removeLast();
+    _historyLines.add(line);
+    setState(() {});
+  }
+
+  void _revocation() {
+    Line line = _historyLines.removeLast();
+    _lines.add(line);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PagerAppBar(onClear: _showClearDialog),
+      appBar: PagerAppBar(
+          onClear: _showClearDialog,
+          onBack: _lines.isEmpty ? null : _back,
+          onRevocation: _historyLines.isEmpty ? null : _revocation),
       body: Stack(
         alignment: Alignment.bottomLeft,
         children: [
