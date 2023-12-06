@@ -30,7 +30,17 @@ class _PagerState extends State<Pager> {
     Colors.green,
     Colors.blue,
     Colors.indigo,
-    Colors.purple
+    Colors.purple,
+    Colors.pink,
+    Colors.grey,
+    Colors.redAccent,
+    Colors.orangeAccent,
+    Colors.yellowAccent,
+    Colors.greenAccent,
+    Colors.blueAccent,
+    Colors.indigoAccent,
+    Colors.purpleAccent,
+    Colors.pinkAccent,
   ];
 
   final List<double> supportStrokeWidth = [1, 2, 4, 6, 8, 10];
@@ -70,23 +80,25 @@ class _PagerState extends State<Pager> {
                     ConstrainedBox(constraints: const BoxConstraints.expand()),
               )),
           Positioned(
-            bottom: 40,
-            child: ColorSelector(
-              supportColors: supportColors,
-              activeIndex: _activeColorIndex,
-              onSelector: _onSelectColor,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 10,
-            child: StorkWidthSelector(
-              supportStorkWidths: supportStrokeWidth,
-              activeIndex: _activeStrokeIndex,
-              onSelect: _onSelectStrokeWidth,
-              color: supportColors[_activeColorIndex],
-            ),
-          )
+              bottom: 0,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ColorSelector(
+                      supportColors: supportColors,
+                      activeIndex: _activeColorIndex,
+                      onSelector: _onSelectColor,
+                    ),
+                  ),
+                  StorkWidthSelector(
+                    supportStorkWidths: supportStrokeWidth,
+                    activeIndex: _activeStrokeIndex,
+                    onSelect: _onSelectStrokeWidth,
+                    color: supportColors[_activeColorIndex],
+                  ),
+                ],
+              ))
         ],
       ),
     );
@@ -130,8 +142,12 @@ class _PagerState extends State<Pager> {
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    _lines.last.points.add(details.localPosition);
-    setState(() {});
+    Offset point = details.localPosition;
+    double distance = (_lines.last.points.last - point).distance;
+    if (distance > 5) {
+      _lines.last.points.add(details.localPosition);
+      setState(() {});
+    }
   }
 }
 
