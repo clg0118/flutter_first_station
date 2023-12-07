@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class PagerAppBar extends StatelessWidget implements PreferredSizeWidget {
+class PaperAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onClear;
   final VoidCallback? onBack;
   final VoidCallback? onRevocation;
 
-  const PagerAppBar(
+  const PaperAppBar(
       {Key? key, required this.onClear, this.onBack, this.onRevocation})
       : super(key: key);
 

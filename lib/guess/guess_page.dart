@@ -5,9 +5,7 @@ import 'package:flutter_first_station/guess/guess_app_bar.dart';
 import 'package:flutter_first_station/guess/result_notice.dart';
 
 class GuessPage extends StatefulWidget {
-  const GuessPage({super.key, required this.title});
-
-  final String title;
+  const GuessPage({super.key});
 
   @override
   State<GuessPage> createState() => _GuessPageState();

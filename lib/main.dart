@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_first_station/guess/guess_page.dart';
-import 'package:flutter_first_station/pager/pager.dart';
 
-import 'counter/counter_page.dart';
-import 'muyu/muyu_page.dart';
+import 'navigation/app_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Pager(),
+      home: const AppNavigation(),
     );
   }
 }

@@ -12,6 +12,7 @@ class MuyuAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleTextStyle: const TextStyle(color: Colors.black),
       title: const Text("电子木鱼"),
       backgroundColor: Colors.white,
+      centerTitle: true,
       iconTheme: const IconThemeData(color: Colors.black),
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,

@@ -2,21 +2,21 @@ import 'dart:core';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_first_station/pager/color_selector.dart';
-import 'package:flutter_first_station/pager/conform_dialog.dart';
-import 'package:flutter_first_station/pager/pager_app_bar.dart';
-import 'package:flutter_first_station/pager/stork_width_selector.dart';
+import 'package:flutter_first_station/paper/paper_app_bar.dart';
+import 'package:flutter_first_station/paper/stork_width_selector.dart';
 
+import 'color_selector.dart';
+import 'conform_dialog.dart';
 import 'model.dart';
 
-class Pager extends StatefulWidget {
-  const Pager({Key? key}) : super(key: key);
+class Paper extends StatefulWidget {
+  const Paper({Key? key}) : super(key: key);
 
   @override
-  State<Pager> createState() => _PagerState();
+  State<Paper> createState() => _PaperState();
 }
 
-class _PagerState extends State<Pager> {
+class _PaperState extends State<Paper> {
   final List<Line> _lines = [];
 
   int _activeColorIndex = 0;
@@ -62,7 +62,7 @@ class _PagerState extends State<Pager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PagerAppBar(
+      appBar: PaperAppBar(
           onClear: _showClearDialog,
           onBack: _lines.isEmpty ? null : _back,
           onRevocation: _historyLines.isEmpty ? null : _revocation),
