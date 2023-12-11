@@ -16,7 +16,7 @@ class Paper extends StatefulWidget {
   State<Paper> createState() => _PaperState();
 }
 
-class _PaperState extends State<Paper> {
+class _PaperState extends State<Paper> with AutomaticKeepAliveClientMixin {
   final List<Line> _lines = [];
 
   int _activeColorIndex = 0;
@@ -149,6 +149,9 @@ class _PaperState extends State<Paper> {
       setState(() {});
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class PaperPainter extends CustomPainter {

@@ -23,7 +23,7 @@ class MuyuPage extends StatefulWidget {
   State<MuyuPage> createState() => _MuyuPageState();
 }
 
-class _MuyuPageState extends State<MuyuPage> {
+class _MuyuPageState extends State<MuyuPage> with AutomaticKeepAliveClientMixin {
   final Uuid uuid = const Uuid();
 
   int _counter = 0;
@@ -152,6 +152,9 @@ class _MuyuPageState extends State<MuyuPage> {
       _records.add(_cruRecord!);
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 
